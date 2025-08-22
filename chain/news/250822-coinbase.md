@@ -67,3 +67,36 @@ Coinbase Payments 는 최초의 풀스택(법정화폐의 암호화폐 전환/ �
 스테이블코인의 활용 확대는 발행사, 수탁사(암호화폐 지갑 생성 및 관리 등), 결제서비스사(온체인 네트워크 관리), 거래소 등이 수혜를 볼 것으로 예상할 수 있다. 특히 화폐는 거래자 간 합의의 매개체로 어떤 재화보다 네트워크 효과가 크게 작용할 것으로 예상되는 만큼 시장 선점이 중요한 바 앞서나가고 있는 기업에 집중할 필요가 있다고 판단한다.
 
 [원문](https://decenter.kr/NewsView/2GWLZQ29V8)
+
+---
+
+# circle's arc network and stellar network
+AI Overview
+Circle launches EURC stablecoin on Stellar network | The Block
+
+Circle's upcoming Arc network is a new, purpose-built layer-1 blockchain for stablecoin finance, while the Stellar network is an existing, open-source network for fast, low-cost payments and digital asset transfers. Circle currently supports its USDC stablecoin on Stellar, but Arc will be Circle's proprietary, foundational blockchain with unique features for stablecoin-focused institutional finance.
+ 
+## Circle's Arc Network
+Purpose:
+A layer-1 blockchain designed specifically for stablecoin finance, focusing on settlement and compliance for institutional clients. 
+
+Key Features:
+Will use USDC as its native gas token to pay transaction fees, offering direct access to Circle's stablecoin infrastructure from day one. 
+
+Development:
+Circle acquired Malachite to gain control of the underlying consensus engine and build Arc, its proprietary network. 
+
+Launch:
+A public testnet is planned for this fall, with a full launch expected by year-end. 
+## Stellar Network
+Purpose:
+An open-source, decentralized network for fast, low-cost digital payments and asset transfers, similar to a digital PayPal. 
+
+Key Features:
+Offers very low transaction fees, fast transaction confirmations (under 5 seconds), and can process various digital assets. 
+
+USDC Integration:
+Circle already supports its USDC and EURC stablecoins on Stellar, with institutions using the network for various on and off-ramps. 
+
+Partnerships:
+Collaborates with organizations like MoneyGram and the UNHCR to leverage its infrastructure for humanitarian aid. 
