@@ -1,0 +1,51 @@
+# nerves iot app running on raspberry pi sample
+
+Nerves is an embedded Elixir platform for building IoT applications on devices like the Raspberry Pi. 
+To create a sample Nerves IoT application running on a Raspberry Pi, one can follow these general steps:
+
+Set up the Nerves development environment:
+
+Install Elixir and Erlang.
+Install nerves_bootstrap using mix archive.install hex nerves_bootstrap.
+
+Create a new Nerves project:
+
+Use `mix nerves.new my_iot_app` to create a new project directory.
+
+Navigate into the new project directory: `cd my_iot_app`.
+
+Configure the target hardware:
+
+Set the MIX_TARGET environment variable to match your Raspberry Pi model (e.g., export MIX_TARGET=rpi3 for a Raspberry Pi 3). 
+This tells Nerves which system image to build.
+
+Add dependencies and application logic:
+
+Edit the mix.exs file to add necessary dependencies, such as circuits_gpio for GPIO control if you're interacting with hardware.
+
+Implement your application logic in Elixir modules within the lib directory. For example, 
+a simple "Blinky" application might use Circuits.GPIO to toggle an LED connected to a specific GPIO pin.
+
+Build the firmware:
+Run mix firmware to compile your application and build the Nerves firmware image for your specified target.
+
+Burn the firmware to an SD card:
+
+Use mix firmware.burn to write the generated firmware image to an SD card. This command will prompt you to select the correct SD card device.
+
+Boot the Raspberry Pi:
+Insert the SD card into your Raspberry Pi and power it on. The Nerves application should boot and run.
+
+Example (Blinky application):
+
+A common starting point is the "Blinky" example, which demonstrates basic hardware interaction. This involves:
+
+Adding {:circuits_gpio, "~> 2.0"} to your deps in mix.exs.
+
+Creating a GenServer or simple module to manage the LED state, using Circuits.GPIO.open/1 and Circuits.GPIO.write/2 to control the LED.
+
+Starting this module in your application's supervision tree (in `lib/my_iot_app/application.ex`).
+
+Interacting with the running application:
+After booting, you can connect to the Raspberry Pi via SSH and access an interactive Elixir shell (IEx) 
+to inspect and interact with your running Nerves application.
