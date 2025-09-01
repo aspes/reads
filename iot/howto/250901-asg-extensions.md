@@ -61,11 +61,11 @@ end
 
 *   `use Spark.Dsl.Extension`: This macro provides the necessary boilerplate for creating DSL extensions.
 *   `@event` and `@log_events`: These are `Spark.Dsl.Entity` structs that define the shape of your new DSL.
-*   `name`: The name of the DSL block or keyword.
-*   `target`: The module that will receive the compiled DSL state.
-*   `schema`: The options available within the DSL block, defined using a keyword list of types.
+   - `name`: The name of the DSL block or keyword.
+   - `target`: The module that will receive the compiled DSL state.
+   - `schema`: The options available within the DSL block, defined using a keyword list of types.
 *   `dsl_patches/0`: This callback returns a list of patches to apply to the Ash resource DSL.
-*   `Spark.Dsl.Patch.AddEntity`: Adds your new DSL entity to the specified `section_path`. In this case, `[:resource]` means adding the `log_events` block directly inside `use Ash.Resource`.
+  *   `Spark.Dsl.Patch.AddEntity`: Adds your new DSL entity to the specified `section_path`. In this case, `[:resource]` means adding the `log_events` block directly inside `use Ash.Resource`.
 
 ### Step 2: Define the Target Modules
 
