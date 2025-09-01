@@ -2,6 +2,8 @@
 
 Writing a custom extension for the Ash Framework involves using the `Spark.Dsl.Extension` to define and patch a new set of declarative constructs onto Ash resources. This process leverages Spark, the powerful DSL-building library that underpins Ash. The key to creating an extension is to use `Spark.Dsl.Extension` and create "patches" that add or modify Ash's DSL entities.
 
+see [hexdoc](https://hexdocs.pm/ash/writing-extensions.html)
+
 ## Example: A Custom `log_events` Extension
 
 Let's walk through an example of a simple extension that adds a `log_events` block to Ash resources, which could be used to enable event logging.
