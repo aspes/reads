@@ -36,3 +36,22 @@ Experience with Embedded Firmware and IoT devices
 Electrical engineering and basic electronics device prototyping
 
 - [Software Engineer II, elixir](https://www.indeed.com/jobs?q=elixir+programming&l=remote&from=searchOnDesktopSerp&cf-turnstile-response=0.oZ7ZDY-cYWdys7sfg0lX4UWrGoYGFMn-r3AM4dFdliW_NhFNzzwRYXQiES7O8dSTI0WISj4I9PacRcdfT9DUOoeeX6NgS_OR8-9E-N1QOr8TW0XRFdNt9rq2mRI417aGBw_AI_Iu3PpiqdXtHoHkQpxYGeWXWmkQ1cG17VE8T01voplqVQUt63God2TQdPe0lsrcCSlC6tSBldX5kqdZxq3ByLzDaPbFbB6XQBSKuljMvgsef7-5eMKQvUMVkE5vLGRzBXRk0Bve7ks53Af6OD59Pb9qIX5HktxwczDT3dqZkg0TUQnei8XoLXGA3ZLNZXc0m_sJ6dj07gBPM4RQp1wRgicNwiiW4fQYUBqc389DRDBJ-rTiw_e3VEs3vu81HZFRPl7mC_84aUfj7dOLATTqwATWZLFLxBt0EVZWenrKl1MiTWeO277kV9bHhpL8yfaBxmw0SkbW2uGxQDlsM6cJQdWY-VJKC_pVwyItY_eOCf2ANwBvKKrPGEWiolLEOa1po9X1uYqVj6bzwdR7G5Zwhb8cuWS9s2mSZPTLkFn120Xmpyj91TL4PS6_LrHyJU5YDt4l45CjHlRcOggRvQCSLuQcYh2YfSqazCSSp7BUfQJ8e2gZGqAuKwMLIEJenRkfYkxX7n4-BSlJwB7XCvFqcxHE4xVXLvCOYbM7u2H-uH5hxkHvmRPZ6luY3NrgMFzviQZ1zdZ-1Wn8601WH7WyKGFRyt9qgVyRg0u15guaEIv-GO3s1qT9BU8lftpJvZxS8o860wVzDdGUBP_JBjUXvXr0Igo1Ni43nUW8lAdewyg9M6DI8ctF7U-kYGWQ76KcdJigrpKOQzcr_9W8zorwXG6nQppM5d5fhgcgZD6Nm-EWdDDQEu_apkIF_wprOhDRyB7-GQNgaP2arMSxqA.QZstkzY5AcQxYU-qP05quQ.92b828b44f84fafc78bfa119062c8525d07834274eab935d4789c33aa3634f31&vjk=988c34d03fd971cf)
+
+### What you can offer Luna
+Bachelors in Computer Science strongly preferred
+2+ years experience building software required
+2+ years of Elixir programming experience preferred, not required
+Are willing to learn Ruby on Rails as required for projects.
+Have demonstrated the ability to collaborate and timely execute on projects
+Are self-starting and technically motivated
+Are able to deliver quality, clean code in a timely and scalable manner
+Are willing and able to interact with near shore contractors.
+Make conscious trade-offs between business requirements, urgency, and technical trade-offs, understanding that "fast and close to right" is often better than "perfect"
+Desire to deliver meaningful impact in people's lives and contribute to true change in healthcare delivery.
+### What Luna can offer you
+At Luna, Engineers have the chance to work on various teams and stacks.
+Stable, well funded health tech company with strong market position.
+Complete remote opportunity (based within North America) with expectation to travel to our Nashville, TN or Rocklin, CA office at least twice a year.
+Benefits on the 1st of the month following start date, stock option equity, unlimited PTO, company paid life insurance, and more.
+Opportunity to grow with a start-up that is revolutionizing the delivery of physical therapy
+Supportive leadership with lots of opportunity for those who wish to grow alongside of Luna
