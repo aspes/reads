@@ -1,0 +1,86 @@
+
+SoC FPGA design with Chisel
+===========================
+
+I think it really starts to become a force to be reckoned with when you upgrade from block design to SoC design. 
+The power of diplomacy (their parameter negotiation framework) and the generator setup in chipyard 
+makes it possible for design teams of 3-5 people to be as impactful as a team of 20-30 at bigger companies.
+
+
+chisel diplomacy parameter negotiation
+======================================
+
+In the Chisel hardware description language, Diplomacy is a parameter negotiation framework that automates 
+the process of determining common parameters, such as wire widths, for connected hardware components based on a shared interconnection protocol. 
+It works by building a graph of interconnected nodes, each representing a device, and then lazily evaluating and cross-checking 
+protocol-specific requirements to resolve free parameters, allowing for customizable and parameterized hardware designs.  
+
+## How it Works
+1. Diplomacy Nodes:
+Diplomacy represents system components as software "nodes" rather than directly as hardware modules. 
+These nodes can be connected to form a directed graph that describes the system's topology. 
+2. Lazy Parameter Negotiation:
+Parameter negotiation in Diplomacy occurs lazily, meaning it happens after the main Diplomacy graph is created and components are defined. 
+This allows nodes to discover and agree on parameters, like the width of a data bus, without requiring all parameters to be known upfront. 
+3. Protocol-Specific Requirements:
+Each node is equipped with protocol-specific requirements. 
+Diplomacy then examines these requirements within the connected sub-graphs to find consensus on shared parameters. 
+4. Parameter and Edge Resolution:
+Diplomacy handles the resolution of these parameters, such as data and control wire widths, 
+and creates EdgeParams that define the negotiated characteristics of the interconnecting wires. 
+
+Key Features
+Automated Interconnect:
+Diplomacy automates the process of solving and connecting hardware components within a shared network. 
+Parameterized Hardware:
+It enables the generation of parameterized hardware designs, 
+where specific features of a protocol, like data widths, can be customized based on the system's needs. 
+Compile-Time Negotiation:
+This powerful feature allows for the negotiation of parameters at compile time, 
+offering more flexibility than traditional methods like Verilog defines. 
+Scalable Design:
+By using a graph-based approach and lazy evaluation, 
+Diplomacy supports the creation of complex and scalable system-on-chip (SoC) designs. 
+Extensibility:
+The framework can be extended to support new protocols and integrate with external components, such as Verilog IPs. 
+
+---
+
+"Chisel Diplomacy parameter negotiation" refers to a hardware design framework built for Chisel, 
+an open-source hardware description language. The Diplomacy framework automates parameter negotiation 
+between different components in a system-on-a-chip (SoC) design, eliminating the need for manual, 
+error-prone configuration. 
+This functionality is central to the RISC-V Rocket Chip generator and other agile hardware development projects. 
+What the Diplomacy framework does
+Diplomacy solves the problem of correctly connecting complex, independently parameterized components 
+in an SoC design. 
+It operates on a graph-based representation of the hardware, where components are nodes and the connections 
+are edges. The key steps of its parameter negotiation process are: 
+Logical-to-physical mapping: The framework first establishes the logical connections between components 
+without specifying physical parameters like bus widths.
+Downward negotiation: The Diplomacy framework performs a "downward" pass through the graph. 
+At this stage, managers (like an interconnect or a memory controller) can push restrictive 
+requirements—such as supported address ranges or bus widths—down to their clients (the components being connected).
+Upward negotiation: A second "upward" pass is then performed. In this phase, clients inform the managers 
+and the rest of the system of their actual required parameters.
+Parameter resolution: The two phases of negotiation effectively cross-check and resolve all parameters, 
+customizing the interconnect based on the specific needs and capabilities of all connected components. 
+Benefits of Diplomacy
+Agile hardware development: Enables a small design team to manage complex SoC designs with a level of 
+productivity that would otherwise require a much larger team.
+Simplifies interconnects: It abstracts away the complexity of correctly parameterizing interconnects, 
+making them easier to manage.
+Reduced errors: The automated negotiation process prevents common errors that occur when manually 
+configuring hardware connections, such as bus width mismatches.
+Enables design space exploration: Allows for quick and easy modification of system parameters, 
+which facilitates rapid design space exploration. 
+Example: The TileLink protocol
+The TileLink protocol, which is widely used in RISC-V SoC designs, is implemented using the Diplomacy framework. 
+Diplomacy handles the negotiation of all the TileLink parameters, such as the width of data and control signals, 
+based on the components connected to the bus. 
+This approach allows for a flexible and modular design where components can be easily added or swapped out 
+without requiring a manual redesign of the bus arbiter and other interconnect logic. 
+
+
+
+
