@@ -339,3 +339,302 @@ logic:
 - The Flight object for UA-456 is updated in the Ontology.
 - The user's application view automatically refreshes, now showing the flight's status as "Delayed" with the new departure time.
 - Crucially, a complete, immutable audit trail is saved, recording that this specific user delayed this flight at this time for this reason.
+
+# Simulation
+Now, Write a function named delay_flight to which flight_number, new_time, and delay_reason will be given as arguments of the function.
+This function will get called when a user clicks a button to execute the "Delay Flight" action. Assume that user interface for the action already exists.
+
+As part of platform logic, this function should follow all the steps of "The Execution Process: From User Click to Data Update" that you described in the last answer.
+To do that, this function should refer to all the configuration files such as ontology/object_types.yml, ontology/link_types.yml, ontology/action_types.yml.
+
+Also, you need to create sample files Doc1, Doc2, Doc3, each linking to backingDataSource of Airport, Flight, and Passenger respectively.
+Don't forget "Data Write-Back to the Source Dataset" during the execution process. 
+
+This is an excellent practice. It moves from theory to a practical simulation.
+Since the Palantir platform itself isn't something we can run code on directly, I will simulate its logic using Python. This script will:
+- Create all the YAML configuration files and sample data files (as CSVs) that you requested.
+- Define the delay_flight function.
+- Execute the function, which will read the YAML files to understand the "platform logic" and perform the data write-back by modifying the correct CSV file.
+
+This example clearly separates the Configuration (the YAML files) from the Data (the CSV files) and the Execution Logic (the Python function).
+
+```python
+# Requires: PyYAML (install with: pip install PyYAML)
+
+import yaml
+import csv
+import os
+
+# --- Configuration & Data Setup ---
+
+# Define the content for all our files
+YAML_CONFIGS = {
+    "ontology/object_types.yml": """
+Airport:
+  rid: "ri.ontology.main.object-type.airport"
+  displayName: "Airport"
+  primaryKey: "airport_code"
+  properties:
+    airport_code: { type: "string" }
+    airport_name: { type: "string" }
+  backingDataSource:
+    type: "dataset"
+    datasetRid: "ri.foundry.main.dataset.airport_data"
+
+Flight:
+  rid: "ri.ontology.main.object-type.flight"
+  displayName: "Flight"
+  primaryKey: "flight_number"
+  properties:
+    flight_number: { type: "string" }
+    status: { type: "string" }
+    departure_time: { type: "timestamp" }
+    origin_airport_code: { type: "string" }
+    destination_airport_code: { type: "string" }
+  backingDataSource:
+    type: "dataset"
+    datasetRid: "ri.foundry.main.dataset.flight_schedule"
+
+Passenger:
+  rid: "ri.ontology.main.object-type.passenger"
+  displayName: "Passenger"
+  primaryKey: "passenger_id"
+  properties:
+    passenger_id: { type: "string" }
+    full_name: { type: "string" }
+    on_flight_number: { type: "string" }
+  backingDataSource:
+    type: "dataset"
+    datasetRid: "ri.foundry.main.dataset.passenger_manifest"
+""",
+    "ontology/link_types.yml": """
+FlightDepartsFromAirport:
+  rid: "ri.ontology.main.link-type.flight-departs-from-airport"
+  displayName: "Departs From"
+  cardinality: "MANY_TO_ONE"
+  from: { objectType: "Flight", foreignKey: "origin_airport_code" }
+  to: { objectType: "Airport", primaryKey: "airport_code" }
+
+PassengerIsOnFlight:
+  rid: "ri.ontology.main.link-type.passenger-is-on-flight"
+  displayName: "Is On Flight"
+  cardinality: "MANY_TO_ONE"
+  from: { objectType: "Passenger", foreignKey: "on_flight_number" }
+  to: { objectType: "Flight", primaryKey: "flight_number" }
+""",
+    "ontology/action_types.yml": """
+DelayFlight:
+  rid: "ri.ontology.main.action-type.delay-flight"
+  displayName: "Delay Flight"
+  appliesTo:
+    objectType: "Flight"
+    cardinality: "ONE"
+  parameters:
+    new_departure_time:
+      displayName: "New Departure Time"
+      type: "timestamp"
+      required: true
+    delay_reason:
+      displayName: "Reason for Delay"
+      type: "string"
+      required: true
+  logic:
+    type: "MODIFY_OBJECT"
+    modifications:
+      - type: "SET_PROPERTY"
+        property: "departure_time"
+        value: { parameter: "new_departure_time" }
+      - type: "SET_PROPERTY"
+        property: "status"
+        value: "Delayed"
+"""
+}
+
+# CSV data for our "backing datasets"
+CSV_DATA = {
+    "data/Doc1_airports.csv": """airport_code,airport_name,city,country
+JFK,John F. Kennedy International,New York,USA
+SFO,San Francisco International,San Francisco,USA
+LHR,London Heathrow,London,UK
+""",
+    "data/Doc2_flights.csv": """flight_number,status,departure_time,origin_airport_code,destination_airport_code
+UA-456,On Time,2025-10-20T17:00:00Z,JFK,LHR
+AA-100,On Time,2025-10-20T18:00:00Z,SFO,JFK
+BA-212,On Time,2025-10-20T19:00:00Z,LHR,SFO
+""",
+    "data/Doc3_passengers.csv": """passenger_id,full_name,seat_number,on_flight_number
+P1001,Alice Smith,12A,UA-456
+P1002,Bob Johnson,12B,UA-456
+P1003,Charlie Brown,22C,AA-100
+"""
+}
+
+# A mapping of the abstract dataset RIDs to the actual data files
+DATA_FILE_MAP = {
+    "ri.foundry.main.dataset.airport_data": "data/Doc1_airports.csv",
+    "ri.foundry.main.dataset.flight_schedule": "data/Doc2_flights.csv",
+    "ri.foundry.main.dataset.passenger_manifest": "data/Doc3_passengers.csv"
+}
+
+def setup_simulation_files():
+    """Creates all the directories and files needed for the simulation."""
+    print("Setting up simulation environment...")
+    os.makedirs("ontology", exist_ok=True)
+    os.makedirs("data", exist_ok=True)
+
+    for path, content in YAML_CONFIGS.items():
+        with open(path, "w") as f:
+            f.write(content)
+    
+    for path, content in CSV_DATA.items():
+        with open(path, "w")as f:
+            f.write(content)
+    print("All config and data files created.\n")
+
+def load_yaml_file(path):
+    """Helper function to load a YAML file."""
+    with open(path, 'r') as f:
+        return yaml.safe_load(f)
+
+# --- Core Platform Logic Simulation ---
+
+def delay_flight(flight_number, new_time, delay_reason):
+    """
+    Simulates the Palantir platform executing the 'DelayFlight' action.
+    
+    This function mimics the "Execution Process" by reading the YAML configs
+    to determine *what* to do and *how* to do it, then performs a write-back
+    to the correct backing data file.
+    """
+    
+    print(f"--- Action 'DelayFlight' triggered for: {flight_number} ---")
+    
+    # The platform would already have these configs loaded, but we load them here.
+    object_configs = load_yaml_file("ontology/object_types.yml")
+    action_configs = load_yaml_file("ontology/action_types.yml")
+    # link_configs are not needed for this action, but the platform would know about them.
+    # link_configs = load_yaml_file("ontology/link_types.yml") 
+    
+    # === Step 1, 2, 3: UI Generation & Submission ===
+    # This is simulated by the call to this function.
+    # The user has already seen the form (generated from 'parameters')
+    # and submitted it with the arguments: flight_number, new_time, delay_reason.
+    print(f"Step 1-3: UI generated, user submitted form with:")
+    print(f"  - flight_number: {flight_number}")
+    print(f"  - new_departure_time: {new_time}")
+    print(f"  - delay_reason: {delay_reason}\n")
+    
+    # === Step 4: Platform Executes the Logic ===
+    print("Step 4: Platform executes logic...")
+    action_name = "DelayFlight"
+    action_config = action_configs[action_name]
+    
+    target_object_type = action_config['appliesTo']['objectType'] # "Flight"
+    logic = action_config['logic']
+    
+    print(f"-> Found action '{action_config['displayName']}'")
+    print(f"-> Logic is '{logic['type']}' on object '{target_object_type}'\n")
+
+    # === Step 5: Data Write-Back to the Source Dataset ===
+    print("Step 5: Performing data write-back...")
+    
+    # 1. Find the target object's config
+    target_object_config = object_configs[target_object_type]
+    
+    # 2. Find its backing dataset and primary key
+    dataset_rid = target_object_config['backingDataSource']['datasetRid']
+    primary_key = target_object_config['primaryKey'] # "flight_number"
+    
+    # 3. Map the abstract dataset RID to the physical file
+    data_file_path = DATA_FILE_MAP.get(dataset_rid)
+    if not data_file_path:
+        print(f"!! FAILED: No data file mapping found for RID: {dataset_rid}")
+        return
+
+    print(f"-> Modifying file: {data_file_path} (identified from RID {dataset_rid})")
+    
+    # 4. Read the file, find the row, and apply modifications
+    all_rows = []
+    header = []
+    was_updated = False
+    
+    try:
+        with open(data_file_path, 'r', newline='') as f:
+            reader = csv.DictReader(f)
+            header = reader.fieldnames
+            
+            for row in reader:
+                # Check if this is the row we need to modify
+                if row[primary_key] == flight_number:
+                    was_updated = True
+                    print(f"-> Found matching row for {primary_key}='{flight_number}'")
+                    
+                    # Process the modifications from the action's logic
+                    for mod in logic['modifications']:
+                        if mod['type'] == 'SET_PROPERTY':
+                            prop = mod['property']
+                            value = mod['value']
+                            
+                            # Determine the new value
+                            new_value = None
+                            if 'parameter' in value:
+                                # Value comes from a user parameter
+                                if value['parameter'] == 'new_departure_time':
+                                    new_value = new_time
+                                elif value['parameter'] == 'delay_reason':
+                                    new_value = delay_reason
+                            elif isinstance(value, str):
+                                # Value is hardcoded in the config
+                                new_value = value
+                            
+                            print(f"--> Applying logic: SET {prop} = {new_value}")
+                            row[prop] = new_value # Apply the change to the row
+                
+                all_rows.append(row)
+
+        # 5. Write the modified data back to the CSV file
+        if was_updated:
+            with open(data_file_path, 'w', newline='') as f:
+                writer = csv.DictWriter(f, fieldnames=header)
+                writer.writeheader()
+                writer.writerows(all_rows)
+            print(f"-> Write-back to {data_file_path} successful.\n")
+        else:
+            print(f"!! FAILED: No row found with {primary_key} = '{flight_number}'\n")
+
+    except Exception as e:
+        print(f"!! FAILED during file operation: {e}\n")
+
+    # === Step 6: Closing the Loop ===
+    print("Step 6: Action complete.")
+    print(f"-> The platform will now re-index {data_file_path} to update the 'Flight' object view.")
+    print("--- End of Action ---")
+
+
+# --- Main execution block to run the simulation ---
+if __name__ == "__main__":
+    # 1. Create all the config and data files
+    setup_simulation_files()
+    
+    # 2. Show the "BEFORE" state of the data
+    print("--- Initial State of data/Doc2_flights.csv ---")
+    # with open(CSV_DATA["data/Doc2_flights.csv".split("\n")[0]], 'r') as f:
+    with open("data/Doc2_flights.csv", 'r') as f:
+        print(f.read())
+    print("="*50 + "\n")
+    
+    # 3. Execute the action as if a user clicked the button
+    delay_flight(
+        flight_number="UA-456", 
+        new_time="2025-10-20T18:30:00Z", 
+        delay_reason="Late inbound aircraft"
+    )
+    
+    print("\n" + "="*50)
+    
+    # 4. Show the "AFTER" state of the data to prove it worked
+    print("\n--- Final State of data/Doc2_flights.csv (after write-back) ---")
+    # with open(CSV_DATA["data/Doc2_flights.csv".split("\n")[0]], 'r') as f:
+    with open("data/Doc2_flights.csv", 'r') as f:
+        print(f.read())
+```
