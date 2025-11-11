@@ -1,4 +1,65 @@
 
+## 뉴로모픽 컴퓨팅 특징
+
+- __집단화된 처리 및 메모리:__ 뇌에서 영감을 받은 뉴로모픽 컴퓨터 칩은 각각의 뉴런에 별도의 영역을 두는 대신 각 뉴런에서 데이터를 함께 처리하고 저장합니다. 처리와 메모리를 함께 배치함으로써 신경망 프로세서와 기타 뉴로모픽 프로세서는 폰 노이만 병목 현상을 피하고 고성능과 낮은 에너지 소비를 동시에 달성할 수 있습니다.
+
+- __대규모 병렬 처리:__ 인텔 랩의 Loihi 2 와 같은 뉴로모픽 칩은 최대 100만 개의 뉴런을 가질 수 있습니다. 각 뉴런은 서로 다른 기능을 동시에 작동합니다. 이론적으로 뉴로모픽 컴퓨터는 뉴런 수만큼 많은 기능을 한 번에 수행할 수 있습니다. 이러한 유형의 병렬 기능은 뇌에서 뉴런이 무작위로 발화되는 것처럼 보이는 확률적 잡음을 모방합니다. 뉴로모픽 컴퓨터는 기존 컴퓨터보다 이 확률적 노이즈를 더 잘 처리하도록 설계되었습니다.
+
+- __본질적으로 확장 가능:__ 뉴로모픽 컴퓨터에는 확장성을 가로막는 기존의 장애물이 없습니다. 더 큰 네트워크를 실행하기 위해 사용자는 뉴로모픽 칩을 더 추가하여 활성 뉴런의 수를 늘릴 수 있습니다.
+
+- __이벤트 중심 계산:__ 개별 뉴런과 시냅스는 다른 뉴런의 스파이크에 반응하여 계산합니다. 즉, 실제로 스파이크를 처리하는 뉴런의 일부만 에너지를 사용하고 나머지 컴퓨터는 유휴 상태로 유지됩니다. 따라서 전력을 매우 효율적으로 사용할 수 있습니다.
+
+- __높은 적응성과 가소성:__ 뉴로모픽 컴퓨터는 인간과 마찬가지로 외부 세계의 변화하는 자극에 유연하게 대응할 수 있도록 설계되었습니다. 스파이크 신경망(SNN) 아키텍처에서는 각 시냅스에 전압 출력이 할당되고 작업에 따라 이 출력을 조정합니다. SNN은 잠재적인 시냅스 지연과 뉴런의 전압 임계값에 따라 서로 다른 연결을 진화하도록 설계되었습니다.
+연구자들은 가소성이 증가하면 뉴로모픽 컴퓨터가 학습하고 새로운 문제를 해결하며 새로운 환경에 빠르게 적응할 수 있을 것으로 기대하고 있습니다.
+
+- __내결함성:__ 뉴로모픽 컴퓨터는 내결함성이 뛰어납니다. 인간의 뇌와 마찬가지로 정보가 여러 곳에 저장되므로 한 구성 요소에 장애가 발생해도 컴퓨터가 작동하는 데 지장이 없습니다.
+
+## 뉴로모픽 컴퓨팅 활용 분야
+
+- 무인 자동차
+- 드론, 로봇
+- 스마트 홈 기기
+- 자연어, 음성 및 이미지 처리
+- 데이터 분석
+- 프로세스 최적화
+
+---
+
+
+
+# Neuromorphic fpga github
+## Notable examples include:
+TENNLab-UTK/fpga: This repository from the TENNLab Neuromorphic Computing group at the University of Tennessee focuses on FPGA-based neuromorphic elements, networks, processors, and associated tooling and software interfaces. It emphasizes the implementation of neuromorphic networks and processors on FPGAs for efficient hardware resource utilization and communication bandwidth, with options for "directive" or "stream" spike processing paradigms.
+
+erictaur/Large-Scale-Reconfigurable-Neuromorphic-Architecture: This project details an FPGA-based design for a large-scale reconfigurable neuromorphic architecture.
+
+open-neuromorphic/fpga-snntorch: This repository provides a tutorial and resources for training Spiking Neural Networks (SNNs) for hardware deployment on conventional GPUs and subsequent inference on embedded FPGAs like the AMD Kria KV260, utilizing High-Level Synthesis (HLS) with AMD Vitis HLS.
+
+dgutierrezATC/TDE_vhdl: This repository presents a VHDL implementation of a Spike-based, Digital Time Difference Encoder (TDE) model for neuromorphic systems, designed to encode the relative timing between two events into a burst of spikes, with applications in areas like event-based optical flow estimation and sound source localization. 
+
+ORNL/NeuroCoreX: This project from Oak Ridge National Laboratory offers an FPGA-based neuromorphic processor designed and implemented using VHDL.
+
+These repositories represent a selection of the open-source efforts available on GitHub related to neuromorphic computing on FPGAs, 
+covering topics from hardware architecture and design to software tools and specific neuromorphic models.
+
+---
+
+# Intel's Loihi neuromorphic research chips 
+They are designed to accelerate bio-realistic neural network simulations by implementing brain-inspired principles directly in silicon, such as asynchronous spiking and event-driven communication. 
+Researchers use the Loihi platform to implement and study models of biological neural systems, from insect brains to the mammalian olfactory bulb. 
+## Key Aspects of Bio-Simulation on Loihi
+- __Neuromorphic Hardware:__ Unlike conventional CPUs or GPUs, Loihi's architecture features many neuromorphic cores designed to emulate the dynamics of biological neurons and synapses with high energy efficiency. This asynchronous, event-driven approach mirrors how biological brains operate, with neurons only communicating when a "spike" event occurs.
+- __Neuron Models:__ Loihi 2 offers greater programmability, allowing researchers to implement more complex and bio-realistic neuron models, such as the Izhikevich model, which can replicate a wide range of intricate neuronal behaviors beyond the simpler Leaky Integrate-and-Fire (LIF) model of its predecessor.
+- __Targeted Biological Systems:__ Research efforts have successfully mapped and simulated specific biological systems on the Loihi hardware:
+  - __Olfactory System:__ A bio-realistic network based on the mammalian olfactory bulb architecture was implemented to demonstrate online learning and spike timing for odor classification.
+  - __Basal Ganglia:__ A spiking neural network (SNN) model of the basal ganglia, a brain region critical for decision-making and reward-based learning, has been implemented on Loihi 2 to perform tasks like the Go/No-Go task.
+  - __Insect Brain Connectome:__ Researchers have demonstrated a "nontrivial, biologically realistic connectome" of the Drosophila melanogaster (fruit fly) brain on the Loihi 2 chip, a significant step in brain-scale simulations.
+- __Software Frameworks:__ The open-source Lava software framework and other tools like NengoLoihi are used to program the chips and provide the necessary interface to map complex neural models onto the hardware. Emulators like Brian2Loihi also exist, allowing for software prototyping before deployment on the physical chip. 
+
+By using neuromorphic chips like Loihi, researchers aim to overcome the power consumption and speed limitations of traditional general-purpose computers when running large-scale, detailed brain simulations, advancing the development of highly efficient, bio-inspired artificial intelligence systems. 
+
+---
+
 # IBM truenorth vs Intel loihi
 
 IBM's TrueNorth and Intel's Loihi are prominent neuromorphic chips, with TrueNorth excelling at scaled, 
