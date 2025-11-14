@@ -193,4 +193,89 @@ Key software tools:
 
 This integrated hardware and software approach provides a comprehensive environment for developing a wide range of neuromorphic applications, from robotics to industrial monitoring. 
 
+---
+
+---
+
+# Design clockless event driven asynchronous digital circuit 
+
+To design a no-clock asynchronous digital circuit, you must replace the global clock with a handshaking protocol to synchronize data transfer between modules. Key design steps include creating a flow table from specifications, reducing the table, assigning state variables, and implementing the circuit while avoiding race conditions and hazards through techniques like using a dual-rail encoding scheme. 
+
+1. Design process 
+- __Define the circuit's behavior:__ Create a primitive flow table from the design specifications, 
+outlining the states and transitions.Reduce the flow table: Merge rows in the primitive flow table 
+to create a reduced flow table. This minimizes the number of states.
+- __Assign binary state variables:__ Assign a unique binary code to each row of the reduced flow table 
+to form a transition table.Derive Boolean functions: Determine the Boolean functions for the outputs, 
+often based on the state variables and inputs.
+- __Implement the circuit:__ Build the circuit using standard logic gates. However, 
+special care is needed to handle the lack of a global clock. 
+
+2. Handling timing and synchronization
+- __Use handshaking protocols:__ Instead of a clock, use a handshaking protocol to signal the readiness 
+to send and receive data. This can be a two-phase or four-phase protocol.
+- __Employ dual-rail encoding:__ A common method for handshaking is dual-rail encoding, 
+where each bit is represented by two wires. For example, 
+a logic '0' might be \(0\) on the first wire and \(1\) on the second, and a logic '1' might be \(1\) on 
+the first and \(0\) on the second.
+- __Use a Muller C-element:__ This is a fundamental building block in asynchronous circuits that 
+functions as a state-holding element, changing its output only when all its inputs agree, similar to 
+an AND gate for events. 
+
+3. Ensuring reliability
+- __Avoid race conditions:__ Ensure that a change in a single input does not cause multiple state variables 
+to change in an unpredictable order, which could lead to an incorrect state.
+- __Eliminate hazards:__ Use techniques to ensure that the circuit is hazard-free. 
+This can involve using specific synthesis methods or adding delays to slow down certain paths.
+- __Perform liveness and stability checking:__ Verify that the circuit will 
+eventually reach a stable state and that it will continue to operate as expected 
+without getting stuck in a non-terminating loop. 
+
+---
+
+
+
+# Designing clockless asynchronous digital circuits in Chisel 
+
+involves adopting specific methodologies, as Chisel is primarily a synchronous design language. 
+The key approach is to use handshaking protocols and modular dataflow components rather than relying on a global clock. 
+
+Here is a breakdown of how to approach this design:
+
+## 1. Understand Asynchronous Design Principles
+
+Asynchronous circuits operate based on local communication and completion signals (handshaking) instead of a shared clock. 
+Key concepts include: 
+- Handshaking Protocols: These manage data transfer between modules. Common types include two-phase and four-phase signaling. In Chisel, these can be modeled using explicit ValidIO bundles or custom bundles that include request/acknowledge signals.
+- Delay Insensitivity: Designs often use encoding schemes like dual-rail encoding (using two wires per bit to signal logic 0, logic 1, or a 'spacer'/no data) to be robust against variations in gate and wire delays.
+- Fundamental Building Blocks: Components like the Muller C-element (a state-holding element that waits for all inputs to be high before going high) are fundamental. You will need to model these explicitly in Chisel using combinational logic and feedback loops, carefully managing potential hazards and race conditions. 
+
+## 2. Leverage Chisel's Abstractions for Asynchronous Design
+While Chisel is synchronous by default, its ability to create hardware generators and use Scala's powerful abstractions makes it suitable for describing asynchronous systems. 
+- Model Components as Modules: Design individual asynchronous components (like C-elements, sequencers, forks, joins, and merges) as distinct Chisel Modules.
+- Explicitly Define I/O for Handshaking: Use IO bundles to define the handshake channels. For example:
+```scala
+class HandshakeChannel[T <: Data](gen: T) extends Bundle {
+  val req = Output(Bool())
+  val ack = Input(Bool())
+  val data = Output(gen)
+}
+```
+- Avoid Chisel's Implicit Clock/Reset: Chisel modules have implicit clock and reset signals. When designing a truly clockless circuit, you need to explicitly manage state and transitions using combinational logic and feedback paths, rather than relying on RegInit or other clocked sequential elements for the main logic.
+- Utilize Existing Libraries/Templates: Research papers and projects, such as those using the "click-element template" or phase-decoupled logic, have demonstrated methods for implementing asynchronous designs in Chisel. These often use edge-triggered flip-flops as the only storage elements, abstracting the timing issues within the components while maintaining an asynchronous system flow. 
+## 3. Design Methodology
+The typical flow for designing in Chisel is:
+- Specification: Define the system behavior, often using a formal method like Communicating Sequential Processes (CSP).
+- Decomposition: Break the system down into interconnected asynchronous modules.
+- Implementation: Code each module in Chisel, managing data flow and control using explicit handshake signals and custom logic (Muller C-elements, latches, etc.).
+- Verification: Asynchronous circuits are harder to verify than synchronous ones due to their data-dependent timing. Simulation in Chisel and formal verification are crucial steps.
+- Synthesis: The Chisel code is converted into FIRRTL, which is then synthesized into a netlist using standard commercial EDA tools (like Synopsys Design Compiler) targeting a specific technology library. 
+
+By focusing on modular design and explicit handshaking, you can design clockless asynchronous circuits in Chisel and achieve benefits like lower power and average-case speed performance. For practical examples, consider exploring available open-source examples and research papers that detail specific implementations, such as the GCD circuit example in a DTU research paper. 
+
+
+
+
+
+
 
